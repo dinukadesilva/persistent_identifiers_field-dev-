@@ -1,0 +1,3 @@
+services:
+  persistent_fields.persister:
+    class: '\Drupal\persistent_fields\Service\PersistentFieldsPersister'

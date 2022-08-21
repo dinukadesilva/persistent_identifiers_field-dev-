@@ -1,0 +1,7 @@
+name: Persistent Identifiers Field Module
+type: module
+description: Allows to create Persistent Ids of different types
+package: Custom
+core_version_requirement: ^9 || ^10
+dependencies:
+  - persistent_identifiers
