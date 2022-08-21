@@ -1,4 +1,4 @@
-field.value.persistent_fields_abcd:
+field.value.persistent_fields_ark_field:
   type: mapping
   label: Default value
   mapping:

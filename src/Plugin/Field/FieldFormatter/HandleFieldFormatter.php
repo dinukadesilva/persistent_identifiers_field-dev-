@@ -7,21 +7,21 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Plugin implementation of the 'uuid_field_formatter' formatter.
+ * Plugin implementation of the 'handle_field_formatter' formatter.
  *
  * @FieldFormatter(
- *   id = "uuid_field_formatter",
+ *   id = "handle_field_formatter",
  *   module = "persistent_fields",
- *   label = @Translation("UUID Persistent ID field formatter"),
+ *   label = @Translation("Handle Persistent ID field formatter"),
  *   field_types = {
- *     "persistent_fields_uuid_item"
+ *     "persistent_fields_handle_item"
  *   }
  * )
  */
-class UUIDFieldFormatter extends AbstractFieldFormatter
+class HandleFieldFormatter extends AbstractFieldFormatter
 {
   public function getMinterName(): string
   {
-    return "UUID";
+    return "Handle";
   }
 }

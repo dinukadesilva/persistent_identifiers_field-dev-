@@ -12,24 +12,24 @@ use Drupal\Core\Entity\EntityInterface;
  * Plugin implementation of the 'sample_field_widget' widget.
  *
  * @FieldWidget(
- *   id = "sample_field_widget",
+ *   id = "ark_field_widget",
  *   module = "persistent_fields",
- *   label = @Translation("Sample Persistent ID Widget"),
+ *   label = @Translation("ARK Persistent ID Widget"),
  *   field_types = {
- *     "persistent_fields_sample_item"
+ *     "persistent_fields_ark_item"
  *   }
  * )
  */
-class SampleFieldWidget extends AbstractFieldWidget
+class ARKFieldWidget extends AbstractFieldWidget
 {
   public function getFieldLabelPrefix(): string
   {
-    return "Sample ";
+    return "ARK ";
   }
 
   public function onMint($entity): string
   {
-    return "-- todo-mint-sample-pid --";
+    return "-- todo-mint-ark-pid --";
   }
 
 }

@@ -21,60 +21,10 @@ use Drupal\Core\Form\FormStateInterface;
  *   }
  * )
  */
-class SampleFieldFormatter extends FormatterBase {
-
-
-    /**
-     * {@inheritdoc}
-     */
-    public static function defaultSettings() {
-        return [
-        // Declare a setting named 'text_length', with
-        // a default value of 'short'
-        'sample_item' => 'long',
-        ];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function settingsForm(array $form, FormStateInterface $form_state) {
-        $form['sample_item'] = [
-        '#title' => $this->t('Sample Minter'),
-        '#type' => 'select',
-        '#options' => [
-            'short' => $this->t('Short'),
-            'long' => $this->t('Long'),
-        ],
-        '#default_value' => $this->getSetting('sample_item'),
-        ];
-        
-        return $form;
-    }
-
-
-
-    /**
-    * {@inheritdoc}
-    */
-    public function viewElements(FieldItemListInterface $items, $langcode){
-        $elements = [];
-
-        foreach ($items as $delta => $item) {
-          $elements[$delta] = [
-            // We create a render array to produce the desired markup,
-            // "<p style="color: #hexcolor">The color code ... #hexcolor</p>".
-            // See theme_html_tag().
-            '#type' => 'html_tag',
-            '#tag' => 'p',
-            '#value' => $this->t('The Minted Identifier for the field is @code', ['@code' => $item->sample_item]),
-          ];
-        }
-    
-        return $elements;
-        
-          
-        
+class SampleFieldFormatter extends AbstractFieldFormatter
+{
+  public function getMinterName(): string
+  {
+    return "Sample";
   }
-
- }
+}
