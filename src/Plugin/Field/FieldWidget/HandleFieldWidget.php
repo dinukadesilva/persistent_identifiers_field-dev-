@@ -29,7 +29,7 @@ class HandleFieldWidget extends AbstractFieldWidget
 
   public function onMint($entity): string
   {
-    return "-- todo-mint-handle-pid --";
+    return  \Drupal::service('hdl.minter.hdl')->mint($entity);
   }
 
 }

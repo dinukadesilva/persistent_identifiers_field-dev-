@@ -29,7 +29,7 @@ class UUIDFieldWidget extends AbstractFieldWidget
 
   public function onMint($entity): string
   {
-    return $entity->uuid();
+    return  \Drupal::service('persistent_identifiers.minter.uuid')->mint($entity);
   }
 
 }

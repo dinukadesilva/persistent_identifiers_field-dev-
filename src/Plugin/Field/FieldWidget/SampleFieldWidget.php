@@ -29,7 +29,7 @@ class SampleFieldWidget extends AbstractFieldWidget
 
   public function onMint($entity): string
   {
-    return "-- todo-mint-sample-pid --";
+    return  \Drupal::service('sample_minter.minter.sample')->mint($entity);
   }
 
 }

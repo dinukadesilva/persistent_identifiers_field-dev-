@@ -29,7 +29,7 @@ class ARKFieldWidget extends AbstractFieldWidget
 
   public function onMint($entity): string
   {
-    return "-- todo-mint-ark-pid --";
+    return  \Drupal::service('ezid.minter.ezid')->mint($entity);
   }
 
 }
