@@ -32,4 +32,13 @@ class UUIDFieldWidget extends AbstractFieldWidget
     return  \Drupal::service('persistent_identifiers.minter.uuid')->mint($entity);
   }
 
+  public function validate($element, FormStateInterface $form_state) {
+    parent::validate($element, $form_state);
+
+    $value = $element['#value'];
+    $persistent_identifier_uuid_regex = "/^http(s?):\/\/.*([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}).*/";
+    if (strlen($value) > 0 && !@preg_match($persistent_identifier_uuid_regex, $value)) {
+      $form_state->setError($element, $this->t('UUID persistent identifier must be a URL containing a UUID.'));
+    }
+  }
 }

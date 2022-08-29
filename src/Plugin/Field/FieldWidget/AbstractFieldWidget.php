@@ -23,6 +23,14 @@ class AbstractFieldWidget extends WidgetBase
     return 'sample-pid';
   }
 
+  public function validate($element, FormStateInterface $form_state) {
+    $value = $element['#value'];
+    if (strlen($value) === 0) {
+      $form_state->setValueForElement($element, '');
+      return;
+    }
+  }
+
   /**
    * {@inheritdoc}
    */
@@ -50,14 +58,15 @@ class AbstractFieldWidget extends WidgetBase
 
     if ($value) {
 
-//      //dpm($entity) --> returns object;
-//      $pid = \Drupal::service('persistent_identifiers.minter.uuid')->mint($entity, $form_state);
-//      //dpm($pid);
-//      if (is_null($pid)) {
-//        \Drupal::logger('persistent_fields')->warning(t("Persistent identifier not created for node @nid.", ['@nid' => $entity->id()]));
-//        \Drupal::messenger()->addWarning(t("Problem creating persistent identifier for this node. Details are available in the Drupal system log."));
-//        return;
-//      }
+      //dpm($entity) --> returns object;
+      $pid = $this->onMint($entity);
+      // $pid = \Drupal::service('persistent_identifiers.minter.uuid')->mint($entity, $form_state);
+      //dpm($pid);
+      if (is_null($pid)) {
+        \Drupal::logger('persistent_fields')->warning(t("Persistent identifier not created for node @nid.", ['@nid' => $entity->id()]));
+        \Drupal::messenger()->addWarning(t("Problem creating persistent identifier for this node. Details are available in the Drupal system log."));
+        return;
+      }
 //      $persister = \Drupal::service('persistent_fields.persister');
 //      //dpm($persister); -->Returns Object of the Service Class
 //
@@ -68,9 +77,7 @@ class AbstractFieldWidget extends WidgetBase
 //        \Drupal::logger('persistent_identifiers')->warning(t("Persistent identifier not created for node @nid.", ['@nid' => $entity->id()]));
 //        \Drupal::messenger()->addWarning(t("Problem creating persistent identifier for this node. Details are available in the Drupal system log."));
 //      }
-
-
-      $pid = $this->onMint($entity);
+//
       $form[$field_name]['widget'][$triggering_element_no]['persistent_item']['#value'] = $pid;
       //$form[$field_name]['widget'][$triggering_element_no]['sample_item']['#attributes']['disabled'] = TRUE;
       //$form[$field_name]['widget'][$triggering_element_no]['sample_minter_checkbox']['#attributes']['disabled'] = TRUE;
@@ -115,8 +122,7 @@ class AbstractFieldWidget extends WidgetBase
       '#open' => TRUE,
       '#attributes' => [
         "id" => "persistent-data-wrapper-$random"
-      ],
-
+      ]
     ];
 
 
@@ -126,6 +132,9 @@ class AbstractFieldWidget extends WidgetBase
       '#default_value' => isset($items[$delta]->persistent_item) ? $items[$delta]->persistent_item : NULL,
       '#attributes' => [
         "disabled" => isset($items[$delta]->persistent_item) ? TRUE : FALSE,
+      ],
+      '#element_validate' => [
+        [$this, 'validate'],
       ]
     );
     $element['persistent_minter_checkbox'] = array(
