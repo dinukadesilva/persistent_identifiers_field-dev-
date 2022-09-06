@@ -23,7 +23,8 @@ class AbstractFieldWidget extends WidgetBase
     return 'sample-pid';
   }
 
-  public function validate($element, FormStateInterface $form_state) {
+  public function validate($element, FormStateInterface $form_state)
+  {
     $value = $element['#value'];
     if (strlen($value) === 0) {
       $form_state->setValueForElement($element, '');
@@ -131,7 +132,7 @@ class AbstractFieldWidget extends WidgetBase
       '#type' => 'textfield',
       '#default_value' => isset($items[$delta]->persistent_item) ? $items[$delta]->persistent_item : NULL,
       '#attributes' => [
-        "disabled" => isset($items[$delta]->persistent_item) ? TRUE : FALSE,
+        "disabled" => isset($items[$delta]->persistent_item) || $form_state->getValue($form_state->getTriggeringElement()['#parents']) ? TRUE : FALSE,
       ],
       '#element_validate' => [
         [$this, 'validate'],
