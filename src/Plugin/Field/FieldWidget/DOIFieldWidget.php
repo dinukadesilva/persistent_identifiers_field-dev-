@@ -29,7 +29,7 @@ class DOIFieldWidget extends AbstractFieldWidget
 
   public function onMint($entity): string
   {
-    return  \Drupal::service('doi_datacite.minter.datacitedois')->mint($entity);
+    return  \Drupal::service('doi_datacite.minter.datacitedois')->mintDraft($entity);
   }
 
   public function formElementxcvxcv(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state)
