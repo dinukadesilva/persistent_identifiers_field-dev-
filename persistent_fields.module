@@ -50,6 +50,9 @@ function persistent_fields_field_widget_form_alter(&$element, \Drupal\Core\Form\
   $value = $form_state->getValue($triggering['#parents']);
 
   if ($field_definition->getType() == 'persistent_fields_doi_field') {
+
+    $doi = $element['persistent_item']["#default_value"];
+
     if ($value) {
       $doi = \Drupal::service('doi_datacite.minter.datacitedois')->mintDraft();
       $element['persistent_item']["#value"] = $doi;
@@ -63,7 +66,6 @@ function persistent_fields_field_widget_form_alter(&$element, \Drupal\Core\Form\
       ]);
     }
 
-    $doi = $element['persistent_item']["#value"];
 
     if (!is_null($doi)) {
       $doi_response = \Drupal::service('doi_datacite.minter.datacitedois')->fetch($doi);
