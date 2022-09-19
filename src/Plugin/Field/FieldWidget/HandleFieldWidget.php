@@ -16,7 +16,7 @@ use Drupal\Core\Entity\EntityInterface;
  *   module = "persistent_fields",
  *   label = @Translation("Handle Persistent ID Widget"),
  *   field_types = {
- *     "persistent_fields_handle_item"
+ *     "persistent_fields_handle_field"
  *   }
  * )
  */

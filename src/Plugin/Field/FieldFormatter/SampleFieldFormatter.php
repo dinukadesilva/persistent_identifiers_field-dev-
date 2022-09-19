@@ -17,7 +17,7 @@ use Drupal\Core\Form\FormStateInterface;
  *   module = "persistent_fields",
  *   label = @Translation("Sample PID field formatter"),
  *   field_types = {
- *     "persistent_fields_sample_item"
+ *     "persistent_fields_sample_field"
  *   }
  * )
  */

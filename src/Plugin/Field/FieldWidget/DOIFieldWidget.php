@@ -23,7 +23,7 @@ const DOI_RESOURCE_TYPE = [
  *   module = "persistent_fields",
  *   label = @Translation("DOI Persistent ID Widget"),
  *   field_types = {
- *     "persistent_fields_doi_item"
+ *     "persistent_fields_doi_field"
  *   }
  * )
  */

@@ -16,7 +16,7 @@ use Drupal\Core\Entity\EntityInterface;
  *   module = "persistent_fields",
  *   label = @Translation("UUID Persistent ID Widget"),
  *   field_types = {
- *     "persistent_fields_uuid_item"
+ *     "persistent_fields_uuid_field"
  *   }
  * )
  */

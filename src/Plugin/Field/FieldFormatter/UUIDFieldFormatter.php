@@ -14,7 +14,7 @@ use Drupal\Core\Form\FormStateInterface;
  *   module = "persistent_fields",
  *   label = @Translation("UUID Persistent ID field formatter"),
  *   field_types = {
- *     "persistent_fields_uuid_item"
+ *     "persistent_fields_uuid_field"
  *   }
  * )
  */

@@ -14,7 +14,7 @@ use Drupal\Core\Form\FormStateInterface;
  *   module = "persistent_fields",
  *   label = @Translation("ARK Persistent ID field formatter"),
  *   field_types = {
- *     "persistent_fields_ark_item"
+ *     "persistent_fields_ark_field"
  *   }
  * )
  */

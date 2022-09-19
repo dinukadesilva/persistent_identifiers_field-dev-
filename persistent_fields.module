@@ -130,12 +130,12 @@ function persistent_fields_field_widget_form_alter(&$element, \Drupal\Core\Form\
 //      ];
     }
 
-  } else if ($field_definition->getType() == 'persistent_fields_uuid_item') {
+  } else if ($field_definition->getType() == 'persistent_fields_uuid_field') {
     if ($value) {
       $doi = \Drupal::service('persistent_identifiers.minter.uuid')->mint($entity);
       $element['persistent_item']["#value"] = $doi;
     }
-  } else if ($field_definition->getType() == 'persistent_fields_sample_item') {
+  } else if ($field_definition->getType() == 'persistent_fields_sample_field') {
     if ($value) {
       $doi = \Drupal::service('sample_minter.minter.sample')->mint($entity);
       $element['persistent_item']["#value"] = $doi;

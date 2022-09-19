@@ -7,10 +7,10 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\TypedData\DataDefinition;
 
 /**
- * Plugin implementation of the 'persistent_fields_sample_item' field type.
+ * Plugin implementation of the 'persistent_fields_sample_field' field type.
  *
  * @FieldType(
- *   id = "persistent_fields_sample_item",
+ *   id = "persistent_fields_sample_field",
  *   module = "persistent_fields",
  *   label = @Translation("Persistent Identifiers Sample Field"),
  *   category = @Translation("General"),

@@ -16,7 +16,7 @@ use Drupal\Core\Entity\EntityInterface;
  *   module = "persistent_fields",
  *   label = @Translation("ARK Persistent ID Widget"),
  *   field_types = {
- *     "persistent_fields_ark_item"
+ *     "persistent_fields_ark_field"
  *   }
  * )
  */

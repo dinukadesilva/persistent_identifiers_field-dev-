@@ -14,7 +14,7 @@ use Drupal\Core\Form\FormStateInterface;
  *   module = "persistent_fields",
  *   label = @Translation("Handle Persistent ID field formatter"),
  *   field_types = {
- *     "persistent_fields_handle_item"
+ *     "persistent_fields_handle_field"
  *   }
  * )
  */
