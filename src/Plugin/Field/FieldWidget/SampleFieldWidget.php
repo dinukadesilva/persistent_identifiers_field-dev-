@@ -27,6 +27,11 @@ class SampleFieldWidget extends AbstractFieldWidget
     return "Sample ";
   }
 
+  public function getProvisionCallback()
+  {
+    return "persistent_fields_ajax_sample_mint";
+  }
+
   public function onMint($entity): string
   {
     return  \Drupal::service('sample_minter.minter.sample')->mint($entity);

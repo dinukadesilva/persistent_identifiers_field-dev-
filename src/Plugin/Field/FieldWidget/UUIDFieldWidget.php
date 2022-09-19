@@ -27,6 +27,11 @@ class UUIDFieldWidget extends AbstractFieldWidget
     return "UUID ";
   }
 
+  public function getProvisionCallback()
+  {
+    return "persistent_fields_ajax_uuid_mint";
+  }
+
   public function onMint($entity): string
   {
     return  \Drupal::service('persistent_identifiers.minter.uuid')->mint($entity);

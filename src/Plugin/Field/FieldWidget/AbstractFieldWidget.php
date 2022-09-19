@@ -12,6 +12,10 @@ use Drupal\Core\Entity\EntityInterface;
 class AbstractFieldWidget extends WidgetBase
 {
 
+  public function getProvisionCallback()
+  {
+    return [$this, "myAjaxCallback"];
+  }
 
   public function getFieldLabelPrefix(): string
   {
@@ -144,7 +148,7 @@ class AbstractFieldWidget extends WidgetBase
       '#default_value' => isset($items[$delta]->persistent_item) ? TRUE : FALSE,
       '#ajax' => [
         // 'callback' =>  '\Drupal\persistent_fields\Plugin\Field\FieldWidget\SampleDefaultWidget::myAjaxCallback',
-        'callback' => [$this, 'myAjaxCallback'],
+        'callback' => $this->getProvisionCallback(),
         'wrapper' => "persistent-data-wrapper-$random"
       ],
       '#attributes' => [

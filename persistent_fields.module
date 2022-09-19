@@ -45,11 +45,11 @@ function persistent_fields_field_widget_form_alter(&$element, \Drupal\Core\Form\
 
   // Add a css class to widget form elements for all fields of type my_type.
   $field_definition = $context['items']->getFieldDefinition();
+  $entity = $form_state->getFormObject()->getEntity();
+  $triggering = $form_state->getTriggeringElement();
+  $value = $form_state->getValue($triggering['#parents']);
+
   if ($field_definition->getType() == 'persistent_fields_doi_field') {
-
-    $triggering = $form_state->getTriggeringElement();
-    $value = $form_state->getValue($triggering['#parents']);
-
     if ($value) {
       $doi = \Drupal::service('doi_datacite.minter.datacitedois')->mintDraft();
       $element['persistent_item']["#value"] = $doi;
@@ -118,20 +118,31 @@ function persistent_fields_field_widget_form_alter(&$element, \Drupal\Core\Form\
           "disabled" => TRUE
         ]
       ];
-      $element['actions'] = [
-        '#type' => 'actions',
-      ];
-      $element['actions']['submit'] = [
-        '#type' => 'submit',
-        "#value" => "Save",
-        '#ajax' => [
-          'callback' => "persistent_fields_ajax_doi_save"
-        ],
-      ];
+//      $element['actions'] = [
+//        '#type' => 'actions',
+//      ];
+//      $element['actions']['submit'] = [
+//        '#type' => 'submit',
+//        "#value" => "Save",
+//        '#ajax' => [
+//          'callback' => "persistent_fields_ajax_doi_save"
+//        ],
+//      ];
     }
 
+  } else if ($field_definition->getType() == 'persistent_fields_uuid_item') {
+    if ($value) {
+      $doi = \Drupal::service('persistent_identifiers.minter.uuid')->mint($entity);
+      $element['persistent_item']["#value"] = $doi;
+    }
+  } else if ($field_definition->getType() == 'persistent_fields_sample_item') {
+    if ($value) {
+      $doi = \Drupal::service('sample_minter.minter.sample')->mint($entity);
+      $element['persistent_item']["#value"] = $doi;
+    }
   }
 }
+
 
 function persistent_fields_ajax_doi_mint(array &$form, FormStateInterface $form_state)
 {
@@ -152,6 +163,24 @@ function persistent_fields_ajax_doi_save(array &$form, FormStateInterface $form_
 }
 
 function persistent_fields_ajax_doi_fetch(array &$form, FormStateInterface $form_state)
+{
+  $triggering = $form_state->getTriggeringElement();
+  $field_name = $triggering['#array_parents'][0];
+  $triggering_element_no = $triggering['#parents'][1];
+
+  return $form[$field_name]['widget'][$triggering_element_no];
+}
+
+function persistent_fields_ajax_sample_mint(array &$form, FormStateInterface $form_state)
+{
+  $triggering = $form_state->getTriggeringElement();
+  $field_name = $triggering['#array_parents'][0];
+  $triggering_element_no = $triggering['#parents'][1];
+
+  return $form[$field_name]['widget'][$triggering_element_no];
+}
+
+function persistent_fields_ajax_uuid_mint(array &$form, FormStateInterface $form_state)
 {
   $triggering = $form_state->getTriggeringElement();
   $field_name = $triggering['#array_parents'][0];
