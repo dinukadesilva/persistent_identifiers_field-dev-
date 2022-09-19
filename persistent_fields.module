@@ -1,0 +1,161 @@
+<?php
+
+
+use Drupal\Core\Form;
+use Drupal\Core\Form\FormBase;
+use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Field\WidgetBase;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Entity\EntityInterface;
+
+/**
+ * @file
+ * Primary module hooks for Persistent Identifiers Field Module module.
+ */
+
+/**
+ * Implements hook_form_alter().
+ */
+//function persistent_fields_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+//  if (isset($form['persistent_minter_checkbox']) && $form['persistent_minter_checkbox']['#value']) {
+////    $form['workflow']['upload_' . $form['type']['#value']] = [
+////      '#type' => 'radios',
+////      '#title' => t('Attachments'),
+////      '#default_value' => in_array($form['type']['#value'], $upload_enabled_types) ? 1 : 0,
+////      '#options' => [t('Disabled'), t('Enabled')],
+////    ];
+//    // Add a custom submit handler to save the array of types back to the config file.
+//    $form['actions']['submit']['#submit'][] = 'mymodule_upload_enabled_types_submit';
+//  }
+//}
+
+const DOI_RESOURCE_TYPE = [
+  'Book', 'BookChapter', 'Collection', 'ComputationalNotebook', 'ConferencePaper', 'ConferenceProceeding',
+  'DataPaper', 'Dataset', 'Dissertation', 'Event', 'Image', 'InteractiveResource', 'Journal', 'JournalArticle',
+  'Model', 'OutputManagementPlan', 'PeerReview', 'PhysicalObject', 'Preprint', 'Report', 'Service', 'Software',
+  'Sound', 'Standard', 'Text', 'Workflow', 'Other'
+];
+
+
+/**
+ * Implements hook_field_widget_form_alter().
+ */
+function persistent_fields_field_widget_form_alter(&$element, \Drupal\Core\Form\FormStateInterface $form_state, $context)
+{
+
+  // Add a css class to widget form elements for all fields of type my_type.
+  $field_definition = $context['items']->getFieldDefinition();
+  if ($field_definition->getType() == 'persistent_fields_doi_field') {
+
+    $triggering = $form_state->getTriggeringElement();
+    $value = $form_state->getValue($triggering['#parents']);
+
+    if ($value) {
+      $doi = \Drupal::service('doi_datacite.minter.datacitedois')->mintDraft();
+      $element['persistent_item']["#value"] = $doi;
+      $doi_response = \Drupal::service('doi_datacite.minter.datacitedois')->save($doi, [
+        "doi_datacite_title" => "Example DOI",
+        "doi_datacite_url" => "http://abcd.example.com",
+        "doi_datacite_creator" => "Nancy Lu",
+        "doi_datacite_publisher" => "ABCD Publisher",
+        "doi_datacite_publication_year" => "2022",
+        "doi_datacite_resource_type" => "Book"
+      ]);
+    }
+
+    $doi = $element['persistent_item']["#value"];
+
+    if (!is_null($doi)) {
+      $doi_response = \Drupal::service('doi_datacite.minter.datacitedois')->fetch($doi);
+
+      $element['doi_datacite_title'] = array(
+        '#title' => 'Title',
+        '#type' => 'textfield',
+        '#value' => $doi_response["doi_datacite_title"],
+        '#attributes' => [
+          "disabled" => TRUE
+        ]
+      );
+      $element['doi_datacite_url'] = array(
+        '#title' => 'URL',
+        '#type' => 'textfield',
+        '#value' => $doi_response["doi_datacite_url"],
+        '#attributes' => [
+          "disabled" => TRUE
+        ]
+      );
+      $element['doi_datacite_creator'] = array(
+        '#title' => 'Creator',
+        '#type' => 'textfield',
+        '#value' => $doi_response["doi_datacite_creator"],
+        '#attributes' => [
+          "disabled" => TRUE
+        ]
+      );
+      $element['doi_datacite_publisher'] = array(
+        '#title' => 'Publisher',
+        '#type' => 'textfield',
+        '#value' => $doi_response["doi_datacite_publisher"],
+        '#attributes' => [
+          "disabled" => TRUE
+        ]
+      );
+      $element['doi_datacite_publication_year'] = array(
+        '#title' => 'Publication year',
+        '#type' => 'textfield',
+        '#value' => $doi_response["doi_datacite_publication_year"],
+        '#attributes' => [
+          "disabled" => TRUE
+        ]
+      );
+      $element['doi_datacite_resource_type'] = [
+        '#title' => 'Type',
+        '#type' => 'select',
+        '#value' => $doi_response["doi_datacite_resource_type"],
+        '#title' => 'Resource type',
+        '#options' => DOI_RESOURCE_TYPE,
+        '#attributes' => [
+          "disabled" => TRUE
+        ]
+      ];
+      $element['actions'] = [
+        '#type' => 'actions',
+      ];
+      $element['actions']['submit'] = [
+        '#type' => 'submit',
+        "#value" => "Save",
+        '#ajax' => [
+          'callback' => "persistent_fields_ajax_doi_save"
+        ],
+      ];
+    }
+
+  }
+}
+
+function persistent_fields_ajax_doi_mint(array &$form, FormStateInterface $form_state)
+{
+  $triggering = $form_state->getTriggeringElement();
+  $field_name = $triggering['#array_parents'][0];
+  $triggering_element_no = $triggering['#parents'][1];
+
+  return $form[$field_name]['widget'][$triggering_element_no];
+}
+
+function persistent_fields_ajax_doi_save(array &$form, FormStateInterface $form_state)
+{
+  $triggering = $form_state->getTriggeringElement();
+  $field_name = $triggering['#array_parents'][0];
+  $triggering_element_no = $triggering['#parents'][1];
+
+  return $form[$field_name]['widget'][$triggering_element_no];
+}
+
+function persistent_fields_ajax_doi_fetch(array &$form, FormStateInterface $form_state)
+{
+  $triggering = $form_state->getTriggeringElement();
+  $field_name = $triggering['#array_parents'][0];
+  $triggering_element_no = $triggering['#parents'][1];
+
+  return $form[$field_name]['widget'][$triggering_element_no];
+}

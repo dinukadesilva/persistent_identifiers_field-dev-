@@ -139,7 +139,7 @@ class AbstractFieldWidget extends WidgetBase
       ]
     );
     $element['persistent_minter_checkbox'] = array(
-      '#title' => $this->t('Generate'),
+      '#title' => $this->t('Provision'),
       '#type' => 'checkbox',
       '#default_value' => isset($items[$delta]->persistent_item) ? TRUE : FALSE,
       '#ajax' => [

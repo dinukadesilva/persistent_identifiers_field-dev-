@@ -8,6 +8,13 @@ use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Entity\EntityInterface;
 
+const DOI_RESOURCE_TYPE = [
+  'Book', 'BookChapter', 'Collection', 'ComputationalNotebook', 'ConferencePaper', 'ConferenceProceeding',
+  'DataPaper', 'Dataset', 'Dissertation', 'Event', 'Image', 'InteractiveResource', 'Journal', 'JournalArticle',
+  'Model', 'OutputManagementPlan', 'PeerReview', 'PhysicalObject', 'Preprint', 'Report', 'Service', 'Software',
+  'Sound', 'Standard', 'Text', 'Workflow', 'Other'
+];
+
 /**
  * Plugin implementation of the 'sample_field_widget' widget.
  *
@@ -24,21 +31,23 @@ class DOIFieldWidget extends AbstractFieldWidget
 {
   public function getFieldLabelPrefix(): string
   {
-    return "DOI ";
+    return '';
   }
 
-  public function onMint($entity): string
+  public function validate($element, FormStateInterface $form_state)
   {
-    return  \Drupal::service('doi_datacite.minter.datacitedois')->mintDraft($entity);
+    $value = $element['#value'];
+    if (strlen($value) === 0) {
+      $form_state->setValueForElement($element, '');
+      return;
+    }
   }
 
-  public function formElementxcvxcv(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state)
+  /**
+   * {@inheritdoc}
+   */
+  public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state)
   {
-
-
-    // Adds border element
-
-
     $random = $this->generateRandomString();
 
     $element += [
@@ -50,12 +59,12 @@ class DOIFieldWidget extends AbstractFieldWidget
       ]
     ];
 
-
     $element['persistent_item'] = array(
       '#title' => $this->t($this->getFieldLabelPrefix() . 'Item Field'),
       '#type' => 'textfield',
       '#default_value' => isset($items[$delta]->persistent_item) ? $items[$delta]->persistent_item : NULL,
       '#attributes' => [
+        "id" => "persistent_item-$random",
         "disabled" => isset($items[$delta]->persistent_item) || $form_state->getValue($form_state->getTriggeringElement()['#parents']) ? TRUE : FALSE,
       ],
       '#element_validate' => [
@@ -63,39 +72,19 @@ class DOIFieldWidget extends AbstractFieldWidget
       ]
     );
     $element['persistent_minter_checkbox'] = array(
-      '#title' => $this->t('Generate'),
+      '#title' => $this->t('Provision'),
       '#type' => 'checkbox',
       '#default_value' => isset($items[$delta]->persistent_item) ? TRUE : FALSE,
       '#ajax' => [
-        // 'callback' =>  '\Drupal\persistent_fields\Plugin\Field\FieldWidget\SampleDefaultWidget::myAjaxCallback',
-        'callback' => [$this, 'myAjaxCallback'],
-        'wrapper' => "persistent-data-wrapper-$random"
+        'callback' => 'persistent_fields_ajax_doi_mint',
+        'wrapper' => $element['#attributes']['id'], //"persistent-data-wrapper-$random",
+        'event' => 'change'
       ],
       '#attributes' => [
         "disabled" => isset($items[$delta]->persistent_item) ? TRUE : FALSE,
       ]
-
     );
-
-    $res = \Drupal::service('doi_datacite.minter.datacitedois')->getDoi("sdf");
-    $element['data.id'] = array(
-      '#title' => $this->t('data.id'),
-      '#type' => 'textfield',
-      // '#value' => "EFGH", //$res // ["data"]["id"]
-      '#ajax' => [
-        // 'callback' =>  '\Drupal\persistent_fields\Plugin\Field\FieldWidget\SampleDefaultWidget::myAjaxCallback',
-        'callback' => [$this, 'onFetchDoi'],
-        'event' => 'click'
-      ],
-    );
-
 
     return $element;
-
   }
-
-  public function onFetchDoi() {
-    return \Drupal::service('doi_datacite.minter.datacitedois')->getDoi("sdf");
-  }
-
 }
