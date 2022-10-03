@@ -73,117 +73,115 @@ function persistent_fields_field_widget_form_alter(&$element, \Drupal\Core\Form\
   $field_definition = $context['items']->getFieldDefinition();
   $entity = $form_state->getFormObject()->getEntity();
   $triggering = $form_state->getTriggeringElement();
-  $value = $form_state->getValue($triggering['#parents']);
 
+  // \Drupal::logger('persistent_fields')->debug("persistent_fields_field_widget_form_alter : " . json_encode($triggering));
 
-  if ($field_definition->getType() == 'persistent_fields_ark_field') {
+  if (is_array($triggering) && array_key_exists("#parents", $triggering) && in_array("persistent_minter_checkbox", $triggering['#parents'])) {
+    $value = $form_state->getValue($triggering['#parents']);
+
     $pid = $element['persistent_item']["#value"];
     if (is_null($pid)) {
       $pid = $element['persistent_item']["#default_value"];
     }
 
-    if ($value) {
-      $pid = \Drupal::service('ezid.minter.ezid')->mint($entity);
+    if ($field_definition->getType() == 'persistent_fields_ark_field') {
+      if ($value) {
+        $pid = \Drupal::service('ezid.minter.ezid')->mint($entity);
 
-      $element['persistent_item']["#value"] = $pid;
-      $element['persistent_item_parent']["#value"] = \Drupal::service('ezid.minter.ezid')->mint($entity);
-      $element['persistent_item_root']["#value"] = \Drupal::service('ezid.minter.ezid')->mint($entity);
+        $element['persistent_item']["#value"] = $pid;
+        $element['persistent_item_parent']["#value"] = \Drupal::service('ezid.minter.ezid')->mint($entity);
+        $element['persistent_item_root']["#value"] = \Drupal::service('ezid.minter.ezid')->mint($entity);
 
-      $pid_response = \Drupal::service('ezid.minter.ezid')->save($pid, [
-        "_target" => "http://example.com/$pid"
-      ]);
-    }
+        $pid_response = \Drupal::service('ezid.minter.ezid')->save($pid, [
+          "_target" => "http://example.com/$pid"
+        ]);
+      }
 
-    if (!is_null($pid)) {
-      $pid_response = \Drupal::service('ezid.minter.ezid')->fetch($pid);
+      if (!is_null($pid)) {
+        $pid_response = \Drupal::service('ezid.minter.ezid')->fetch($pid);
 
-      $element['doi_datacite_target'] = array(
-        '#title' => 'Target',
-        '#type' => 'textfield',
-        '#value' => $pid_response["_target"],
-        '#attributes' => [
-          "disabled" => TRUE
-        ]
-      );
-    }
-  } else if ($field_definition->getType() == 'persistent_fields_doi_field') {
-    $pid = $element['persistent_item']["#value"];
-    if (is_null($pid)) {
-      $pid = $element['persistent_item']["#default_value"];
-    }
+        $element['doi_datacite_target'] = array(
+          '#title' => 'Target',
+          '#type' => 'textfield',
+          '#value' => $pid_response["_target"],
+          '#attributes' => [
+            "disabled" => TRUE
+          ]
+        );
+      }
+    } else if ($field_definition->getType() == 'persistent_fields_doi_field') {
+      if ($value) {
+        $pid = \Drupal::service('doi_datacite.minter.datacitedois')->mintDraft();
+        $pidRoot = \Drupal::service('doi_datacite.minter.datacitedois')->mintDraft();
+        $pidParent = \Drupal::service('doi_datacite.minter.datacitedois')->mintDraft();
 
-    if ($value) {
-      $pid = \Drupal::service('doi_datacite.minter.datacitedois')->mintDraft();
-      $pidRoot = \Drupal::service('doi_datacite.minter.datacitedois')->mintDraft();
-      $pidParent = \Drupal::service('doi_datacite.minter.datacitedois')->mintDraft();
+        $element['persistent_item']["#value"] = $pid;
+        $element['persistent_item_parent']["#value"] = $pidParent;
+        $element['persistent_item_root']["#value"] = $pidRoot;
 
-      $element['persistent_item']["#value"] = $pid;
-      $element['persistent_item_parent']["#value"] = $pidParent;
-      $element['persistent_item_root']["#value"] = $pidRoot;
+        $pid_response = \Drupal::service('doi_datacite.minter.datacitedois')->save($pid, [
+          "doi_datacite_title" => "Example DOI",
+          "doi_datacite_url" => "http://abcd.example.com/" . $pid,
+          "doi_datacite_creator" => "Nancy Lu",
+          "doi_datacite_publisher" => "ABCD Publisher",
+          "doi_datacite_publication_year" => "2022",
+          "doi_datacite_resource_type" => "Book"
+        ]);
+      }
 
-      $pid_response = \Drupal::service('doi_datacite.minter.datacitedois')->save($pid, [
-        "doi_datacite_title" => "Example DOI",
-        "doi_datacite_url" => "http://abcd.example.com/" . $pid,
-        "doi_datacite_creator" => "Nancy Lu",
-        "doi_datacite_publisher" => "ABCD Publisher",
-        "doi_datacite_publication_year" => "2022",
-        "doi_datacite_resource_type" => "Book"
-      ]);
-    }
+      if (!is_null($pid)) {
+        $pid_response = \Drupal::service('doi_datacite.minter.datacitedois')->fetch($pid);
 
-    if (!is_null($pid)) {
-      $pid_response = \Drupal::service('doi_datacite.minter.datacitedois')->fetch($pid);
-
-      $element['doi_datacite_title'] = array(
-        '#title' => 'Title',
-        '#type' => 'textfield',
-        '#value' => $pid_response["doi_datacite_title"],
-        '#attributes' => [
-          "disabled" => TRUE
-        ]
-      );
-      $element['doi_datacite_url'] = array(
-        '#title' => 'URL',
-        '#type' => 'textfield',
-        '#value' => $pid_response["doi_datacite_url"],
-        '#attributes' => [
-          "disabled" => TRUE
-        ]
-      );
-      $element['doi_datacite_creator'] = array(
-        '#title' => 'Creator',
-        '#type' => 'textfield',
-        '#value' => $pid_response["doi_datacite_creator"],
-        '#attributes' => [
-          "disabled" => TRUE
-        ]
-      );
-      $element['doi_datacite_publisher'] = array(
-        '#title' => 'Publisher',
-        '#type' => 'textfield',
-        '#value' => $pid_response["doi_datacite_publisher"],
-        '#attributes' => [
-          "disabled" => TRUE
-        ]
-      );
-      $element['doi_datacite_publication_year'] = array(
-        '#title' => 'Publication year',
-        '#type' => 'textfield',
-        '#value' => $pid_response["doi_datacite_publication_year"],
-        '#attributes' => [
-          "disabled" => TRUE
-        ]
-      );
-      $element['doi_datacite_resource_type'] = [
-        '#title' => 'Type',
-        '#type' => 'select',
-        '#value' => $pid_response["doi_datacite_resource_type"],
-        '#title' => 'Resource type',
-        '#options' => DOI_RESOURCE_TYPE,
-        '#attributes' => [
-          "disabled" => TRUE
-        ]
-      ];
+        $element['doi_datacite_title'] = array(
+          '#title' => 'Title',
+          '#type' => 'textfield',
+          '#value' => $pid_response["doi_datacite_title"],
+          '#attributes' => [
+            "disabled" => TRUE
+          ]
+        );
+        $element['doi_datacite_url'] = array(
+          '#title' => 'URL',
+          '#type' => 'textfield',
+          '#value' => $pid_response["doi_datacite_url"],
+          '#attributes' => [
+            "disabled" => TRUE
+          ]
+        );
+        $element['doi_datacite_creator'] = array(
+          '#title' => 'Creator',
+          '#type' => 'textfield',
+          '#value' => $pid_response["doi_datacite_creator"],
+          '#attributes' => [
+            "disabled" => TRUE
+          ]
+        );
+        $element['doi_datacite_publisher'] = array(
+          '#title' => 'Publisher',
+          '#type' => 'textfield',
+          '#value' => $pid_response["doi_datacite_publisher"],
+          '#attributes' => [
+            "disabled" => TRUE
+          ]
+        );
+        $element['doi_datacite_publication_year'] = array(
+          '#title' => 'Publication year',
+          '#type' => 'textfield',
+          '#value' => $pid_response["doi_datacite_publication_year"],
+          '#attributes' => [
+            "disabled" => TRUE
+          ]
+        );
+        $element['doi_datacite_resource_type'] = [
+          '#title' => 'Type',
+          '#type' => 'select',
+          '#value' => $pid_response["doi_datacite_resource_type"],
+          '#title' => 'Resource type',
+          '#options' => DOI_RESOURCE_TYPE,
+          '#attributes' => [
+            "disabled" => TRUE
+          ]
+        ];
 //      $element['actions'] = [
 //        '#type' => 'actions',
 //      ];
@@ -194,17 +192,18 @@ function persistent_fields_field_widget_form_alter(&$element, \Drupal\Core\Form\
 //          'callback' => "persistent_fields_ajax_doi_save"
 //        ],
 //      ];
-    }
+      }
 
-  } else if ($field_definition->getType() == 'persistent_fields_uuid_field') {
-    if ($value) {
-      $pid = \Drupal::service('persistent_identifiers.minter.uuid')->mint($entity);
-      $element['persistent_item']["#value"] = $pid;
-    }
-  } else if ($field_definition->getType() == 'persistent_fields_sample_field') {
-    if ($value) {
-      $pid = \Drupal::service('sample_minter.minter.sample')->mint($entity);
-      $element['persistent_item']["#value"] = $pid;
+    } else if ($field_definition->getType() == 'persistent_fields_uuid_field') {
+      if ($value) {
+        $pid = \Drupal::service('persistent_identifiers.minter.uuid')->mint($entity);
+        $element['persistent_item']["#value"] = $pid;
+      }
+    } else if ($field_definition->getType() == 'persistent_fields_sample_field') {
+      if ($value) {
+        $pid = \Drupal::service('sample_minter.minter.sample')->mint($entity);
+        $element['persistent_item']["#value"] = $pid;
+      }
     }
   }
 }
