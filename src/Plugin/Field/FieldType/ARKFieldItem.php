@@ -18,7 +18,8 @@ use Drupal\Core\TypedData\DataDefinition;
  *   category = @Translation("General"),
  *   description = @Translation("ARK minter field and persister."),
  *   default_widget = "ark_field_widget",
- *   default_formatter = "ark_field_formatter"
+ *   default_formatter = "ark_field_formatter",
+ *   cardinality = 1
  * )
  *
  * @DCG

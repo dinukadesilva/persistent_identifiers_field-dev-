@@ -18,7 +18,8 @@ use Drupal\Core\TypedData\DataDefinition;
  *   category = @Translation("General"),
  *   description = @Translation("DOI minter field and persister."),
  *   default_widget = "doi_field_widget",
- *   default_formatter = "doi_field_formatter"
+ *   default_formatter = "doi_field_formatter",
+ *   cardinality = 1
  * )
  *
  * @DCG
@@ -27,9 +28,39 @@ use Drupal\Core\TypedData\DataDefinition;
  * Check out /core/lib/Drupal/Core/Field/Plugin/Field/FieldType directory for a
  * list of available field type implementations.
  */
-class DOIFieldItem extends AbstractFieldItem {
-  public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
-    $properties['field_item'] = DataDefinition::create('string')
+class DOIFieldItem extends AbstractFieldItem
+{
+  public static function schema(FieldStorageDefinitionInterface $field)
+  {
+    $schema = parent::schema($field);
+
+    $schema['columns']['persistent_item_root'] = [
+      'type' => 'varchar',
+      'length' => 1024,
+    ];
+    $schema['columns']['persistent_item_parent'] = [
+      'type' => 'varchar',
+      'length' => 1024,
+    ];
+//    $schema['columns']['persistent_item_parent_ref'] = [
+//      'type' => 'varchar',//TODO
+//      'length' => 1024,
+//    ];
+//    $schema['columns']['persistent_item_root_ref'] = [
+//      'type' => 'varchar',//TODO
+//      'length' => 1024,
+//    ];
+
+    return $schema;
+  }
+
+  public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition)
+  {
+    $properties['persistent_item_root'] = DataDefinition::create('string')
+      ->setLabel(t('Persistent Field DOI Root Id'));
+    $properties['persistent_item_parent'] = DataDefinition::create('string')
+      ->setLabel(t('Persistent Field DOI Parent Id'));
+    $properties['persistent_item'] = DataDefinition::create('string')
       ->setLabel(t('Persistent Field DOI Minted Id'));
 
     return $properties;

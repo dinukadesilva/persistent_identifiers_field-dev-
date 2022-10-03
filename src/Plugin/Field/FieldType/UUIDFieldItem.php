@@ -16,7 +16,8 @@ use Drupal\Core\TypedData\DataDefinition;
  *   category = @Translation("General"),
  *   description = @Translation("UUID minter field and persister."),
  *   default_widget = "uuid_field_widget",
- *   default_formatter = "uuid_field_formatter"
+ *   default_formatter = "uuid_field_formatter",
+ *   cardinality = 1
  * )
  */
 class UUIDFieldItem extends AbstractFieldItem {

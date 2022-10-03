@@ -115,6 +115,8 @@ class AbstractFieldWidget extends WidgetBase
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state)
   {
 
+    dpm("formElement");
+
 
     // Adds border element
 
@@ -135,11 +137,6 @@ class AbstractFieldWidget extends WidgetBase
       '#title' => $this->t($this->getFieldLabelPrefix() . 'Item Field'),
       '#type' => 'textfield',
       '#default_value' => isset($items[$delta]->persistent_item) ? $items[$delta]->persistent_item : NULL,
-      '#ajax' => [
-        // 'callback' =>  '\Drupal\persistent_fields\Plugin\Field\FieldWidget\SampleDefaultWidget::myAjaxCallback',
-        'callback' => $this->getProvisionCallback(),
-        'wrapper' => "persistent-data-wrapper-$random"
-      ],
       '#attributes' => [
         "disabled" => isset($items[$delta]->persistent_item) || $form_state->getValue($form_state->getTriggeringElement()['#parents']) ? TRUE : FALSE,
       ],

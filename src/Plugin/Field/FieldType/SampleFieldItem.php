@@ -16,7 +16,8 @@ use Drupal\Core\TypedData\DataDefinition;
  *   category = @Translation("General"),
  *   description = @Translation("Sample minter field and persister."),
  *   default_widget = "sample_field_widget",
- *   default_formatter = "sample_field_formatter"
+ *   default_formatter = "sample_field_formatter",
+ *   cardinality = 1
  * )
  */
 class SampleFieldItem extends AbstractFieldItem {

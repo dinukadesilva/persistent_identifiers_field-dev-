@@ -14,36 +14,6 @@ class AbstractFieldFormatter extends FormatterBase
     return '';
   }
 
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function defaultSettings()
-  {
-    return [
-      'persistent_item' => 'long',
-    ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function settingsForm(array $form, FormStateInterface $form_state)
-  {
-    $form['sample_item'] = [
-      '#title' => $this->t($this->getMinterName() . ' Minter'),
-      '#type' => 'select',
-      '#options' => [
-        'short' => $this->t('Short'),
-        'long' => $this->t('Long'),
-      ],
-      '#default_value' => $this->getSetting('persistent_item'),
-    ];
-
-    return $form;
-  }
-
-
   /**
    * {@inheritdoc}
    */
@@ -63,8 +33,6 @@ class AbstractFieldFormatter extends FormatterBase
     }
 
     return $elements;
-
-
   }
 
 }
