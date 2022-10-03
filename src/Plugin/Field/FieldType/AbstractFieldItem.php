@@ -16,7 +16,7 @@ class AbstractFieldItem extends FieldItemBase {
       $columns = [
         'persistent_item' => [
           'type' => 'varchar',
-          'length' => 1000,
+          'length' => 1024,
 
         ],
       ];

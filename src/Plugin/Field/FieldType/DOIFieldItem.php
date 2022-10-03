@@ -42,14 +42,6 @@ class DOIFieldItem extends AbstractFieldItem
       'type' => 'varchar',
       'length' => 1024,
     ];
-//    $schema['columns']['persistent_item_parent_ref'] = [
-//      'type' => 'varchar',//TODO
-//      'length' => 1024,
-//    ];
-//    $schema['columns']['persistent_item_root_ref'] = [
-//      'type' => 'varchar',//TODO
-//      'length' => 1024,
-//    ];
 
     return $schema;
   }

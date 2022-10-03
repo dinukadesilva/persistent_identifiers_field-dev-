@@ -29,8 +29,29 @@ use Drupal\Core\TypedData\DataDefinition;
  * list of available field type implementations.
  */
 class ARKFieldItem extends AbstractFieldItem {
-  public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
-    $properties['field_item'] = DataDefinition::create('string')
+  public static function schema(FieldStorageDefinitionInterface $field)
+  {
+    $schema = parent::schema($field);
+
+    $schema['columns']['persistent_item_root'] = [
+      'type' => 'varchar',
+      'length' => 1024,
+    ];
+    $schema['columns']['persistent_item_parent'] = [
+      'type' => 'varchar',
+      'length' => 1024,
+    ];
+
+    return $schema;
+  }
+
+  public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition)
+  {
+    $properties['persistent_item_root'] = DataDefinition::create('string')
+      ->setLabel(t('Persistent Field ARK Root Id'));
+    $properties['persistent_item_parent'] = DataDefinition::create('string')
+      ->setLabel(t('Persistent Field ARK Parent Id'));
+    $properties['persistent_item'] = DataDefinition::create('string')
       ->setLabel(t('Persistent Field ARK Minted Id'));
 
     return $properties;

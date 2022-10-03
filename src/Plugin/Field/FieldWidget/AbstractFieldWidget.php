@@ -115,11 +115,7 @@ class AbstractFieldWidget extends WidgetBase
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state)
   {
 
-    dpm("formElement");
-
-
     // Adds border element
-
 
     $random = $this->generateRandomString();
 
