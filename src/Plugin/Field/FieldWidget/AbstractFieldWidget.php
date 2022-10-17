@@ -133,9 +133,6 @@ class AbstractFieldWidget extends WidgetBase
       '#title' => $this->t($this->getFieldLabelPrefix() . 'Item Field'),
       '#type' => 'textfield',
       '#default_value' => isset($items[$delta]->persistent_item) ? $items[$delta]->persistent_item : NULL,
-      '#attributes' => [
-        "disabled" => isset($items[$delta]->persistent_item) || $form_state->getValue($form_state->getTriggeringElement()['#parents']) ? TRUE : FALSE,
-      ],
       '#element_validate' => [
         [$this, 'validate'],
       ]

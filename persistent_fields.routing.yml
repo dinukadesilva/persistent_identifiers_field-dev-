@@ -1,0 +1,7 @@
+persistent_fields.persistent_field_settings:
+  path: '/admin/config/system/persistent-field-settings'
+  defaults:
+    _title: 'Persistent field settings'
+    _form: 'Drupal\persistent_fields\Form\PersistentFieldSettingsForm'
+  requirements:
+    _permission: 'administer site configuration'
