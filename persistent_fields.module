@@ -7,6 +7,7 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Url;
 
 /**
  * @file
@@ -95,7 +96,7 @@ function persistent_fields_field_widget_form_alter(&$element, \Drupal\Core\Form\
   ) {
     $value = $form_state->getValue($triggering['#parents']);
 
-    if(isset($element['persistent_item']["#value"])) {
+    if (isset($element['persistent_item']["#value"])) {
       $pid = $element['persistent_item']["#value"];
     } else {
       $pid = $element['persistent_item']["#default_value"];
@@ -264,7 +265,7 @@ function persistent_fields_finalize_field_widget_form_alter(&$element, \Drupal\C
 //    $value = $form_state->getValue($triggering['#parents']);
     \Drupal::logger('persistent_fields')->debug("persistent_fields_field_widget_finalize_form_alter : " . json_encode($triggering));
 
-    if(isset($element['persistent_item']["#value"])) {
+    if (isset($element['persistent_item']["#value"])) {
       $pid = $element['persistent_item']["#value"];
     } else {
       $pid = $element['persistent_item']["#default_value"];
@@ -423,7 +424,7 @@ function persistent_fields_fetch_field_widget_form_alter(&$element, \Drupal\Core
   ) {
     \Drupal::logger('persistent_fields')->debug("persistent_fields_fetch_field_widget_form_alter : ");
 
-    if(isset($element['persistent_item']["#value"])) {
+    if (isset($element['persistent_item']["#value"])) {
       $pid = $element['persistent_item']["#value"];
     } else {
       $pid = $element['persistent_item']["#default_value"];
@@ -567,4 +568,23 @@ function persistent_fields_ajax_ark_mint(array &$form, FormStateInterface $form_
   $field_name = $triggering['#array_parents'][0];
 
   return $form[$field_name]['widget'];
+}
+
+/**
+ * Implements hook_help().
+ */
+function persistent_fields_help($route_name, \Drupal\Core\Routing\RouteMatchInterface $route_match)
+{
+  $help_content = '<div>
+      <h3>About</h3>
+      <p>The persistent fields module provides most of the functionality needed for assigning different types of
+      persistent identifiers to publications, citations and applications content types that will be used for
+      One Science Place. It provides a building block for use in those content types and possibly others.</p>
+  </div>';
+
+  switch ($route_name) {
+    case 'persistent_fields.admin_display':
+    case 'help.page.persistent_fields':
+      return $help_content;
+  }
 }
