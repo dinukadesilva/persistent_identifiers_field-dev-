@@ -1,0 +1,14 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the Persistent Identifiers Field Module module.
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function persistent_fields_uninstall($is_syncing) {
+  // Delete remaining general module variables.
+  // \Drupal::state()->delete('mymodule.foo');
+}
