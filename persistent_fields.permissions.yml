@@ -1,0 +1,4 @@
+administer persistent_fields configuration:
+  title: 'Administer persistent_fields configuration'
+  description: 'Optional description.'
+  restrict access: true
