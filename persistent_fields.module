@@ -633,8 +633,8 @@ function persistent_fields_ajax_submit(array &$form, FormStateInterface $form_st
     foreach ($entity->getFields() as $fieldname => $field) {
       if ($field->getFieldDefinition()->getType() == "persistent_fields_ark_field") {
         $pid = $form[$fieldname]["widget"][0]["persistent_item"]["#value"];
-
-        if (!is_null($pid) && isset($element['doi_datacite_title']) && !$element['doi_datacite_title']["#attributes"]["disabled"]) {
+        $element = $form[$fieldname]["widget"][0];
+        if (!$element['doi_datacite_title']["#attributes"]["disabled"]) {
           $node = $form_state->getFormObject()->getEntity();
           $path_alias = PathAlias::create([
             'path' => '/node/' . $node->id(),
