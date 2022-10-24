@@ -56,13 +56,17 @@ class DOIFieldWidget extends AbstractFieldWidget
 //      'callback' => $this->getProvisionCallback(),
 //      'wrapper' => $element['#attributes']['id']
 //    ];
+    $disabled = True;
+    if (isset($element['persistent_item']) && isset($element['persistent_item']['#attributes'])) {
+      $disabled = $element['persistent_item']['#attributes']['disabled'];
+    }
 
     $element['persistent_item_root'] = array(
       '#title' => $this->t('Root DOI'),
       '#type' => $this->getSetting('showRoot') ? 'textfield' : 'hidden',
       '#default_value' => isset($items[$delta]->persistent_item_root) ? $items[$delta]->persistent_item_root : NULL,
       "#attributes" => [
-        "disabled" => $element['persistent_item']['#attributes']['disabled']
+        "disabled" => $disabled
       ]
     );
     $element['persistent_item_parent'] = array(
@@ -70,7 +74,7 @@ class DOIFieldWidget extends AbstractFieldWidget
       '#type' => $this->getSetting('showParent') ? 'textfield' : 'hidden',
       '#default_value' => isset($items[$delta]->persistent_item_parent) ? $items[$delta]->persistent_item_parent : NULL,
       "#attributes" => [
-        "disabled" => $element['persistent_item']['#attributes']['disabled']
+        "disabled" => $disabled
       ]
     );
 

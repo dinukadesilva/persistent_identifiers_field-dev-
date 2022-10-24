@@ -135,6 +135,9 @@ class AbstractFieldWidget extends WidgetBase
       '#default_value' => isset($items[$delta]->persistent_item) ? $items[$delta]->persistent_item : NULL,
       '#element_validate' => [
         [$this, 'validate'],
+      ],
+      '#attributes' => [
+        "disabled" => isset($items[$delta]->persistent_item) ? TRUE : FALSE,
       ]
     );
     $element['persistent_minter_checkbox'] = array(
